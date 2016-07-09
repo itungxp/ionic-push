@@ -38,7 +38,7 @@ angular.module('starter.controllers', [])
 
   })
 
-  .controller('ChatsCtrl', function ($scope, Chats) {
+  .controller('ChatsCtrl', function ($scope, $http) {
     // With the new view caching in Ionic, Controllers are only called
     // when they are recreated or on app start, instead of every page change.
     // To listen for when this page is active (for example, to refresh data),
@@ -47,10 +47,16 @@ angular.module('starter.controllers', [])
     //$scope.$on('$ionicView.enter', function(e) {
     //});
 
-    $scope.chats = Chats.all();
-    $scope.remove = function (chat) {
-      Chats.remove(chat);
-    };
+    $http({
+      method: 'GET',
+      url: 'https://api.ionic.io/users',
+      headers: {
+        'Authorization': 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJqdGkiOiIxMTMxMzU2YS1kZDM4LTQzYzItYTAwMy0xZjdmMTFlMmU1NzEifQ.LrKfmJczxYs3NIx5agIZWD0pO-9jlw9_InF8QfGKq0c'
+      }
+    })
+      .then(function (response) {
+        $scope.users = response.data.data;
+      });
   })
 
   .controller('ChatDetailCtrl', function ($scope, $stateParams, Chats) {
@@ -58,7 +64,7 @@ angular.module('starter.controllers', [])
   })
 
   .controller('AccountCtrl', function ($scope, $state) {
-    $scope.$on('$ionicView.enter', function(e) {
+    $scope.$on('$ionicView.enter', function (e) {
       $scope.user = Ionic.User.current();
 
       Ionic.io();
